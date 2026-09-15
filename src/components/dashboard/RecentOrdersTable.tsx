@@ -43,22 +43,22 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
 
         <div className="flex items-center gap-2">
           {/* Tab Filters */}
-          <div className="flex bg-slate-100 p-1 rounded-xl text-xs font-bold text-slate-600">
+        <div className="flex bg-slate-100 p-1 rounded-xl text-xs font-bold text-slate-600">
             <button
               onClick={() => setFilter('all')}
-              className={`px-3 py-1.5 rounded-lg transition-all ${filter === 'all' ? 'bg-white text-slate-900 shadow-xs' : ''}`}
+              className={`px-3 py-2.5 min-h-[40px] rounded-lg transition-all touch-manipulation ${filter === 'all' ? 'bg-white text-slate-900 shadow-xs' : ''}`}
             >
               All ({orders.length})
             </button>
             <button
               onClick={() => setFilter('active')}
-              className={`px-3 py-1.5 rounded-lg transition-all ${filter === 'active' ? 'bg-white text-slate-900 shadow-xs' : ''}`}
+              className={`px-3 py-2.5 min-h-[40px] rounded-lg transition-all touch-manipulation ${filter === 'active' ? 'bg-white text-slate-900 shadow-xs' : ''}`}
             >
               On Route
             </button>
             <button
               onClick={() => setFilter('delivered')}
-              className={`px-3 py-1.5 rounded-lg transition-all ${filter === 'delivered' ? 'bg-white text-slate-900 shadow-xs' : ''}`}
+              className={`px-3 py-2.5 min-h-[40px] rounded-lg transition-all touch-manipulation ${filter === 'delivered' ? 'bg-white text-slate-900 shadow-xs' : ''}`}
             >
               Delivered
             </button>

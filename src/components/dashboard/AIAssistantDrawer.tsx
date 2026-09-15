@@ -288,14 +288,14 @@ export const AIAssistantDrawer: React.FC<AIAssistantDrawerProps> = ({
   };
 
   return (
-    <Card className="border-slate-800 bg-slate-900 text-white shadow-lg flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-emerald-600/30 border border-emerald-500 flex items-center justify-center text-emerald-400">
+    <Card className="border-slate-800 bg-slate-900 text-white shadow-lg flex flex-col overflow-hidden">
+      {/* Header — wraps to two rows on very small screens to avoid overflow */}
+      <div className="flex flex-wrap items-center justify-between gap-y-2 pb-3 mb-3 border-b border-slate-800 min-w-0">
+        <div className="flex items-center gap-2.5 min-w-0 shrink">
+          <div className="w-8 h-8 rounded-lg bg-emerald-600/30 border border-emerald-500 flex items-center justify-center text-emerald-400 shrink-0">
             <Bot className="w-4 h-4" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h3 className="font-bold text-sm text-white flex items-center gap-1.5">
               <span>ICC Assistant</span>
               <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800">
@@ -305,12 +305,12 @@ export const AIAssistantDrawer: React.FC<AIAssistantDrawerProps> = ({
             <p className="text-[11px] text-slate-400 font-medium">Real business data • {detectedLanguage.toUpperCase()}</p>
           </div>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 shrink-0">
           <select
             aria-label="Assistant language"
             value={selectedLanguage}
             onChange={(event) => handleLanguageChange(event.target.value)}
-            className="max-w-23 bg-slate-950 border border-slate-700 text-slate-300 rounded-lg px-1.5 py-1 text-[10px] font-semibold outline-none focus:border-emerald-500"
+            className="max-w-[6rem] bg-slate-950 border border-slate-700 text-slate-300 rounded-lg px-1.5 py-2.5 text-[10px] font-semibold outline-none focus:border-emerald-500 min-h-[40px] touch-manipulation"
           >
             {languages.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
@@ -318,20 +318,22 @@ export const AIAssistantDrawer: React.FC<AIAssistantDrawerProps> = ({
             type="button"
             onClick={handleTestVoice}
             disabled={isTestVoiceLoading || !voice.isSupported}
-            className="text-[10px] font-bold text-slate-400 hover:text-emerald-300 px-2 py-1 rounded-lg border border-slate-700 hover:border-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+            className="text-[10px] font-bold text-slate-400 hover:text-emerald-300 px-2 py-2 min-h-[40px] rounded-lg border border-slate-700 hover:border-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 touch-manipulation"
             title="Test voice output in selected language"
+            aria-label="Test voice output"
           >
             {isTestVoiceLoading ? (
               <Loader2 className="w-3 h-3 animate-spin" />
             ) : (
               <Volume2 className="w-3 h-3" />
             )}
-            <span>Test Voice</span>
+            <span>Test</span>
           </button>
           <button
             type="button"
             onClick={handleClearConversation}
-            className="text-[10px] font-bold text-slate-400 hover:text-white px-2 py-1 rounded-lg border border-slate-700 hover:border-slate-500 transition-colors"
+            className="text-[10px] font-bold text-slate-400 hover:text-white px-2 py-2 min-h-[40px] rounded-lg border border-slate-700 hover:border-slate-500 transition-colors touch-manipulation"
+            aria-label="Clear conversation"
           >
             Clear
           </button>
@@ -382,14 +384,14 @@ export const AIAssistantDrawer: React.FC<AIAssistantDrawerProps> = ({
         {voice.status === 'speaking' && <button type="button" onClick={() => { window.speechSynthesis?.cancel(); voice.setStatus('idle'); }} className="mt-2 inline-flex items-center gap-1 text-[11px] font-bold text-slate-400 hover:text-white"><Square className="h-3 w-3" /> Stop voice</button>}
       </div>
 
-      {/* Suggested Questions */}
-      <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-none mb-2">
+      {/* Suggested Questions — horizontally scrollable, contained within card */}
+      <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-none mb-2 -mx-1 px-1">
         {suggestedQuestions.map((q, idx) => (
           <button
             key={idx}
             onClick={() => handleAskQuestion(q)}
             disabled={isLoading}
-            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold shrink-0 transition-colors cursor-pointer touch-manipulation border border-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-2.5 py-2 min-h-[36px] bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold shrink-0 transition-colors cursor-pointer touch-manipulation border border-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {q}
           </button>
@@ -439,13 +441,14 @@ export const AIAssistantDrawer: React.FC<AIAssistantDrawerProps> = ({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Ask about your business..."
-          className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs font-semibold text-white outline-none focus:border-emerald-500 transition-all placeholder:text-slate-500"
+          className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-3 min-h-[44px] text-xs font-semibold text-white outline-none focus:border-emerald-500 transition-all placeholder:text-slate-500"
           disabled={isLoading}
         />
         <button
           type="submit"
           disabled={isLoading || !query.trim()}
-          className="px-3.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl flex items-center justify-center font-bold text-xs cursor-pointer touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Send question"
+          className="px-3.5 min-w-[44px] min-h-[44px] bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl flex items-center justify-center font-bold text-xs cursor-pointer touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
         </button>
