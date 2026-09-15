@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Environment secrets — NEVER commit
+.env
+.env.local
+.env.production
+
+# SQLite database files — never commit real business data
+*.db
+*.sqlite
+*.sqlite3
+
+# Alembic compiled caches
+alembic/__pycache__/
+alembic/versions/__pycache__/
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy / type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+# Node / Next.js
+node_modules/
+.next/
+out/
+
+# Development server logs
+dev-server-*.txt
+dev-server-*.log
+
+# Local screenshots
+mobile-*.png

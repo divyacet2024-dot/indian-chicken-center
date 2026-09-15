@@ -1,0 +1,74 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files
+.env*
+!.env.example
+!.env.local.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# SQLite database files — never commit real business data
+*.db
+*.sqlite
+*.sqlite3
+
+# Python artifacts (backend/)
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.python-version
+venv/
+.venv/
+
+# Debug/diagnostic scripts and screenshots (development only)
+check-page.js
+debug-blank-page.js
+screenshot-*.png
+page-screenshot.png
+
+# OS artifacts
+Thumbs.db
+ehthumbs.db
+# Local development logs
+dev-server-*.txt
+dev-server-*.log
+
+# Local mobile test screenshots
+mobile-*.png
