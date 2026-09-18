@@ -13,7 +13,10 @@ interface AddOrderModalProps {
   trucks: Truck[];
   trips?: Trip[];
   onAddOrder: (orderData: any) => Promise<void> | void;
+  onOpenAddCustomer: () => void;
 }
+
+import { SearchableCustomerSelect } from '@/components/ui/SearchableCustomerSelect';
 
 export const AddOrderModal: React.FC<AddOrderModalProps> = ({
   isOpen,
@@ -22,6 +25,7 @@ export const AddOrderModal: React.FC<AddOrderModalProps> = ({
   trucks,
   trips = [],
   onAddOrder,
+  onOpenAddCustomer,
 }) => {
   const [customerId, setCustomerId] = useState(customers[0]?.id || '');
   const activeTrips = trips.filter((t) => t.status === 'active');
@@ -45,6 +49,10 @@ export const AddOrderModal: React.FC<AddOrderModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!customerId) {
+      setErrorMsg('Please select a customer.');
+      return;
+    }
     setErrorMsg(null);
     setIsLoading(true);
 
@@ -92,14 +100,15 @@ export const AddOrderModal: React.FC<AddOrderModalProps> = ({
           </div>
         )}
 
-        <Select
-          label="Select Customer / Shop"
+        <SearchableCustomerSelect
+          customers={customers}
           value={customerId}
-          onChange={(e) => setCustomerId(e.target.value)}
-          options={customers.map((c) => ({
-            value: c.id,
-            label: `${c.shopName} (${c.customerName})`,
-          }))}
+          onChange={setCustomerId}
+          label="Select Customer / Shop"
+          onOpenAddCustomer={() => {
+            onClose();
+            onOpenAddCustomer();
+          }}
         />
 
         {trips.length > 0 ? (

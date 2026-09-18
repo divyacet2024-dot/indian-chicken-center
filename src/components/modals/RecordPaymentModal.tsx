@@ -12,7 +12,10 @@ interface RecordPaymentModalProps {
   customers: Customer[];
   selectedCustomerId?: string;
   onRecordPayment: (paymentData: any) => Promise<void> | void;
+  onOpenAddCustomer: () => void;
 }
+
+import { SearchableCustomerSelect } from '@/components/ui/SearchableCustomerSelect';
 
 export const RecordPaymentModal: React.FC<RecordPaymentModalProps> = ({
   isOpen,
@@ -20,6 +23,7 @@ export const RecordPaymentModal: React.FC<RecordPaymentModalProps> = ({
   customers,
   selectedCustomerId,
   onRecordPayment,
+  onOpenAddCustomer,
 }) => {
   const [customerId, setCustomerId] = useState(selectedCustomerId || customers[0]?.id || '');
   const [amount, setAmount] = useState('10000');
@@ -43,7 +47,10 @@ export const RecordPaymentModal: React.FC<RecordPaymentModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedCustomer) return;
+    if (!selectedCustomer) {
+      setErrorMsg('Please select a customer.');
+      return;
+    }
 
     setErrorMsg(null);
     setIsLoading(true);
@@ -76,14 +83,15 @@ export const RecordPaymentModal: React.FC<RecordPaymentModalProps> = ({
           </div>
         )}
 
-        <Select
-          label="Select Customer"
+        <SearchableCustomerSelect
+          customers={customers}
           value={customerId}
-          onChange={(e) => setCustomerId(e.target.value)}
-          options={customers.map((c) => ({
-            value: c.id,
-            label: `${c.shopName} (${c.customerName}) - Due: ₹${c.currentBalance.toLocaleString('en-IN')}`,
-          }))}
+          onChange={setCustomerId}
+          label="Select Customer"
+          onOpenAddCustomer={() => {
+            onClose();
+            onOpenAddCustomer();
+          }}
         />
 
         {/* Customer Balance Banner */}

@@ -159,7 +159,14 @@ export default function SaaSPlatformPage() {
     setIsClient(true);
 
     const checkAuth = async () => {
-      const storedToken = ApiClient.getStoredToken();
+      let storedToken: string | null = null;
+      try {
+        storedToken = ApiClient.getStoredToken();
+      } catch (storageErr) {
+        console.warn('Unable to access token storage:', storageErr);
+        storedToken = null;
+      }
+
       if (!storedToken) {
         setIsAuthenticated(false);
         setAuthLoading(false);
@@ -175,7 +182,11 @@ export default function SaaSPlatformPage() {
         setIsAuthenticated(true);
       } catch (err) {
         console.warn('Stored token invalid or expired:', err);
-        ApiClient.setToken(null);
+        try {
+          ApiClient.setToken(null);
+        } catch (clearErr) {
+          console.warn('Unable to clear invalid token:', clearErr);
+        }
         setIsAuthenticated(false);
       } finally {
         setAuthLoading(false);
@@ -741,6 +752,7 @@ export default function SaaSPlatformPage() {
         trucks={trucks}
         trips={trips}
         onAddOrder={handleAddOrder}
+        onOpenAddCustomer={() => setIsAddCustomerOpen(true)}
       />
 
       <AddCustomerModal
@@ -784,6 +796,7 @@ export default function SaaSPlatformPage() {
         customers={customers}
         selectedCustomerId={selectedCustomerIdForPayment}
         onRecordPayment={handleRecordPayment}
+        onOpenAddCustomer={() => setIsAddCustomerOpen(true)}
       />
 
       <WhatsAppBillModal

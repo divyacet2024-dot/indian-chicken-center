@@ -47,6 +47,7 @@ export const UpdateLocationModal: React.FC<UpdateLocationModalProps> = ({
   const [nearbyOrders, setNearbyOrders] = useState<any[]>([]);
   const [nearbyBuyers, setNearbyBuyers] = useState<any[]>([]);
   const [isLoadingBuyers, setIsLoadingBuyers] = useState(false);
+  const [hasLocation, setHasLocation] = useState<boolean>(true);
 
   useEffect(() => {
     if (currentStatus) {
@@ -58,6 +59,19 @@ export const UpdateLocationModal: React.FC<UpdateLocationModalProps> = ({
     if (!tripId) return;
     setIsLoadingBuyers(true);
     try {
+      try {
+        await ApiClient.getLatestTripLocation(tripId);
+        setHasLocation(true);
+      } catch (err: any) {
+        if (err.status === 404 || err.status === 400) {
+          setHasLocation(false);
+          setNearbyOrders([]);
+          setNearbyBuyers([]);
+          setIsLoadingBuyers(false);
+          return;
+        }
+      }
+
       const [orders, buyers] = await Promise.all([
         ApiClient.getNearbyPendingOrders(tripId, 150).catch(() => []),
         ApiClient.getNearbyBusinessesNearTrip(tripId, 100).catch(() => []),
@@ -396,7 +410,14 @@ export const UpdateLocationModal: React.FC<UpdateLocationModalProps> = ({
               {isLoadingBuyers && <span className="text-[11px] text-emerald-600 font-bold animate-pulse">Calculating Distance...</span>}
             </div>
 
-            {nearbyBuyers.length === 0 ? (
+            {!hasLocation ? (
+              <div className="py-6 text-center text-slate-500 space-y-2 font-semibold bg-slate-50 border border-slate-200 rounded-xl">
+                <p>Location unavailable — start GPS sharing for this trip to find nearby orders/businesses.</p>
+                <Button size="sm" variant="outline" onClick={() => setActiveTab('location')} icon={<MapPin className="w-4 h-4" />}>
+                  Go to Location Tab
+                </Button>
+              </div>
+            ) : nearbyBuyers.length === 0 ? (
               <div className="py-6 text-center text-slate-400 space-y-2">
                 <p>No potential buyers registered within 100 km of current truck location ({latitude}, {longitude}).</p>
                 <Button size="sm" variant="outline" onClick={() => setActiveTab('add_buyer')} icon={<Plus className="w-4 h-4" />}>
